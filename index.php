@@ -69,5 +69,6 @@
     <br>
     <button type="submit">Guardar producto</button>
   </form>
+  <script src="js/app.js"></script>
 </body>
 </html>
