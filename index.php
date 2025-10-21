@@ -12,12 +12,12 @@
       <form id="formProducto">
         <div class='fila'>
           <div class='grupo'>
-            <h2>Nombre</h2>
-            <input type="text" id="nombre" name="nombre" required placeholder="Ingrese nombre">
-          </div>
-          <div class='grupo'>
             <h2>Código</h2>
             <input type="text" id="codigo" name="codigo" required placeholder="Ingrese código">
+          </div>
+          <div class='grupo'>
+            <h2>Nombre</h2>
+            <input type="text" id="nombre" name="nombre" required placeholder="Ingrese nombre">
           </div>
         </div>
 
@@ -46,10 +46,6 @@
 
         <div class='fila'>
           <div class='grupo'>
-            <h2>Precio</h2>
-            <input type="number" id="precio" name="precio" min="0" step="0.01" required placeholder="0.00">
-          </div>
-          <div class='grupo'>
             <h2>Moneda</h2>
             <select id="moneda" name="moneda" required>
               <option value="" selected disabled>Seleccione una moneda</option>
@@ -59,6 +55,10 @@
               <option value="sol">Sol</option>
               <option value="peso colombiano">Peso colombiano</option>
             </select>
+          </div>
+          <div class='grupo'>
+            <h2>Precio</h2>
+            <input type="number" id="precio" name="precio" min="0" step="0.01" required placeholder="0.00">
           </div>
         </div>
 
@@ -82,11 +82,11 @@
             <textarea id="descripcion" name="descripcion" rows="4" cols="50" required placeholder="Descripción del producto"></textarea>
           </div>
         </div>
-
-
-
         <br>
-        <button type="submit">Guardar producto</button>
+        <div class='botonera'>
+          <button type="submit">Guardar producto</button>
+        </div>
+        
       </form>
     </div>
   <script src="js/app.js"></script>

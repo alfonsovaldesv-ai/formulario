@@ -3,13 +3,19 @@ body {
 }
 
 .contenedor {
-  display: flex;
+  border: 2px solid #ccc; /* el marco gris */
+  padding: 16px;          /* espacio interno */
+  border-radius: 8px;     /* esquinas redondeadas (opcional) */
+  margin: 0 auto;
   font-family: "Arial", sans-serif;
+}
+
+fieldset {
+  display: flex;
   justify-content: center;
-  flex-direction: column;
-  align-items: center;     /* centra verticalmente */
-  height: 100vh;           /* usa toda la altura de la pantalla */
-  margin: 0;               /* elimina márgenes por defecto */
+  flex-direction: row;
+  gap: 10px;
+  border: 0px;
 }
 
 .fila {
@@ -24,7 +30,24 @@ body {
   width: 200px;
 }
 
-button {
-  background-color: #1aab8a;
+textarea {
+  width: 402px;
+  height: 79px;
 }
 
+button {
+  background-color: #1aab8a;
+  width: 200px;
+  display: flex;
+  color:white;
+  width: 200px;
+  height: 50px;
+  border: 0px;
+  justify-content: center; /* centra el texto horizontalmente */
+  align-items: center;     /* centra el texto verticalmente */
+}
+
+.botonera{
+  display: flex;
+  justify-content: center;
+}
