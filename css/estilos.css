@@ -43,6 +43,7 @@ button {
   width: 200px;
   height: 50px;
   border: 0px;
+  border-radius: 12px;
   justify-content: center; /* centra el texto horizontalmente */
   align-items: center;     /* centra el texto verticalmente */
 }
