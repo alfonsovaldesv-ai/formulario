@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector("form");
-  const mensaje = document.querySelector("#mensaje");
-  const lista = document.querySelector("#lista-usuarios");
 
   // Elementos
+  const form = document.querySelector("form");
+
+  let codigosExistentes = [];
+
   const inputNombre = document.getElementById("nombre");
   const inputCodigo = document.getElementById("codigo");
   const inputBodega = document.getElementById("bodega");
@@ -17,6 +18,52 @@ document.addEventListener("DOMContentLoaded", function () {
   const regexCodigo = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
   const regexPrecio = /^\d+(\.\d{1,2})?$/;
 
+
+  // Cargar todos los códigos desde el servidor
+  fetch("php/obtener_codigos.php")
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "ok") {
+        codigosExistentes = data.codigos.map(c => c.toLowerCase()); // para comparar sin mayúsculas/minúsculas
+        console.log("Códigos cargados:", codigosExistentes);
+      } else {
+        console.error("Error al obtener códigos:", data.message);
+      }
+    })
+    .catch(err => console.error("Error de red:", err));
+
+  inputBodega.addEventListener('focus', async function () {
+      try {
+        const res = await fetch("php/obtener_bodegas.php");
+        console.log('ya hizo fetch');
+        console.log(res);
+        const data = await res.json();
+        console.log('ya obtuvo la data');
+    
+        if (data.status === "ok") {
+          // Limpia el select (para no duplicar opciones)
+          inputBodega.innerHTML = '<option value="">Seleccione una bodega</option>';
+          console.log(data.bodegas);
+          // Recorre las bodegas recibidas y las agrega como opciones
+          data.bodegas.forEach(bodega => {
+            const option = document.createElement("option");
+            option.value = bodega.id_bodega;   // o el campo correcto de tu tabla
+            option.textContent = bodega.nombre_bodega; // o descripción, etc.
+            inputBodega.appendChild(option);
+            console.log('agregando bodega');
+          });
+        } else {
+          console.error("Error al obtener bodegas:", data.message);
+          // alert("No se pudieron cargar las bodegas.");
+        }
+    
+      } catch (err) {
+        console.error("Error de red:", err);
+        // alert("Error al cargar las bodegas");
+      }
+    });
+
+  
   // -------------------- FUNCIONES DE VALIDACION --------------------
   function validarNombre() {
     const val = inputNombre.value.trim();
@@ -45,12 +92,15 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("El código del producto debe contener letras y números.");
       return false;
     }
+    if (val in codigosExistentes) {
+      alert('El código del producto ya está registrado')
+    }
     return true;
   }
 
   function validarBodega() {
     if (inputBodega.value.trim() === "") {
-      alert("Debe seleccionar una bodega");
+      //alert("Debe seleccionar una bodega");
       return false;
     }
     return true;
@@ -114,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // checkboxesMateriales.forEach(chk => chk.addEventListener("change", validarMateriales));
 
   // -------------------- VALIDACIÓN AL ENVIAR FORM --------------------
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault(); // evita recarga de página
 
     // Ejecutar todas las validaciones
@@ -132,21 +182,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Si todo pasa, enviar mediante AJAX
-    const nombre = inputNombre.value.trim();
-    fetch("php/guardar_usuario.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "nombre=" + encodeURIComponent(nombre),
-    })
-      .then(res => res.json())
-      .then(data => {
-        mensaje.textContent = "¡Nombre guardado!";
-        inputNombre.value = "";
-        lista.innerHTML = data.map(u => `<li>${u.nombre}</li>`).join("");
-      })
-      .catch(err => {
-        mensaje.textContent = "Error al guardar el nombre.";
-        console.error(err);
-      });
+    const form = document.getElementById('formProducto');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // Evita que el formulario se recargue
+    
+      // Crear FormData con todos los campos del formulario
+      const formData = new FormData(form);
+    
+      try {
+        const res = await fetch("php/guardar_producto.php", {
+          method: "POST",
+          body: formData // FormData se encarga de codificar correctamente
+        });
+    
+        const data = await res.json();
+    
+        if (data.status === "ok") {
+          alert("Producto guardado correctamente!");
+          form.reset(); // limpia el formulario
+        } else if (data.error) {
+          alert("Error: " + data.error);
+        } else {
+          alert("Respuesta inesperada del servidor");
+          console.log(data);
+        }
+    
+      } catch (err) {
+        alert('Error al guardar el producto');
+        console.log(err);
+      }
+    });
+    
   });
 });

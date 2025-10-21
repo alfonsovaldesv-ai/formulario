@@ -1,18 +1,18 @@
-version: "3.8"
+version: '3.8'
+
 services:
   db:
-    image: postgres:18
+    image: postgres:15
     container_name: pg-local
     environment:
+      POSTGRES_DB: productos
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: productos
     ports:
       - "5432:5432"
     volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - pgdata:/var/lib/postgresql/data
-      - ./sql:/docker-entrypoint-initdb.d   # tus .sql se ejecutan automáticamente
-    restart: unless-stopped
 
 volumes:
   pgdata:
