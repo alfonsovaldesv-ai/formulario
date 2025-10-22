@@ -44,11 +44,6 @@
             <h2>Moneda</h2>
             <select id="moneda" name="moneda" required>
               <option value="" selected disabled>Seleccione una moneda</option>
-              <option value="dolar americano">Dólar americano</option>
-              <option value="peso chileno">Peso chileno</option>
-              <option value="peso mexicano">Peso mexicano</option>
-              <option value="sol">Sol</option>
-              <option value="peso colombiano">Peso colombiano</option>
             </select>
           </div>
           <div class='grupo'>

@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const inputBodega = document.getElementById("bodegaSelect");
   const inputSucursal = document.getElementById("sucursalSelect");
+  const inputMoneda = document.getElementById("moneda");
   const inputCodigo = document.getElementById("codigo");
   let codigosExistentes = [];
 
-  // 1️⃣ Cargar los códigos existentes
+  // 1️⃣ Cargar códigos existentes
   try {
     const res = await fetch("php/obtener_codigos.php");
     if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-
     const data = await res.json();
     if (data.status === "ok") {
       codigosExistentes = data.codigos.map(c => c.codigo_producto);
@@ -17,11 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error al obtener códigos:", error);
   }
 
-  // 2️⃣ Cargar las bodegas
+  // 2️⃣ Cargar bodegas
   try {
     const res = await fetch("php/obtener_bodegas.php");
     if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-
     const data = await res.json();
     if (data.status === "ok") {
       inputBodega.innerHTML = '<option value="">Seleccione una bodega</option>';
@@ -38,21 +37,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error al obtener bodegas:", error);
   }
 
-  // 3️⃣ Cuando cambia la bodega, cargar las sucursales asociadas
+  // 3️⃣ Cargar monedas
+  try {
+    const resMoneda = await fetch("php/obtener_monedas.php");
+    if (!resMoneda.ok) throw new Error(`Error HTTP: ${resMoneda.status}`);
+    const dataMoneda = await resMoneda.json();
+    if (dataMoneda.status === "ok") {
+      inputMoneda.innerHTML = '<option value="">Seleccione una moneda</option>';
+      dataMoneda.monedas.forEach(nombre => {
+        const option = document.createElement("option");
+        option.value = nombre;
+        option.textContent = nombre;
+        inputMoneda.appendChild(option);
+      });
+    } else {
+      alert("No se pudieron cargar las monedas.");
+    }
+  } catch (error) {
+    console.error("Error al obtener monedas:", error);
+  }
+
+  // 4️⃣ Cuando cambia la bodega, cargar sucursales
   inputBodega.addEventListener("change", async function () {
     const bodegaSeleccionada = this.value;
-    if (!bodegaSeleccionada) {
-      inputSucursal.innerHTML = '<option value="">Seleccione una sucursal</option>';
-      return;
-    }
+    inputSucursal.innerHTML = '<option value="">Seleccione una sucursal</option>';
+    if (!bodegaSeleccionada) return;
 
     try {
       const res = await fetch(`php/obtener_sucursales.php?bodega=${encodeURIComponent(bodegaSeleccionada)}`);
       if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-
       const data = await res.json();
       if (data.status === "ok") {
-        // inputSucursal.innerHTML = '<option value="">Seleccione una sucursal</option>';
         data.sucursales.forEach(nombre => {
           const option = document.createElement("option");
           option.value = nombre;
@@ -67,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // 4️⃣ Validar código del producto
+  // 5️⃣ Validar código del producto
   inputCodigo.addEventListener("blur", function () {
     const val = this.value.trim();
     if (codigosExistentes.includes(val)) {
