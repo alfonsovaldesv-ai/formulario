@@ -20,11 +20,8 @@ try {
     $query = "SELECT * FROM bodega";
     $result = $pdo->query($query);
   
-    $bodegas = [];
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-      $bodegas[] = $row['nombre_bodega'];
-    }
-  
+    $bodegas = $result->fetchAll(PDO::FETCH_COLUMN, 1);
+
     echo json_encode(["status" => "ok", "bodegas" => $bodegas]);
   } catch (PDOException $e) {
     echo json_encode(["status" => "error", "message" => $e->getMessage()]);

@@ -24,20 +24,15 @@
         <div class='fila'>
           <div class='grupo'>
             <h2>Bodega</h2>
-            <select id="bodega" name="bodega" required>
+            <select id="bodegaSelect" name="bodega" required>
               <option value="" selected disabled>Seleccione una bodega</option>
-              <option value="AKIKB">AKIKB</option>
             </select>
           </div>
 
           <div class='grupo'>
             <h2>Sucursal</h2>
-            <select id="sucursal" name="sucursal" required>
+            <select id="sucursalSelect" name="sucursal" required>
               <option value="" selected disabled>Seleccione una sucursal</option>
-              <option value="quilicura">Quilicura</option>
-              <option value="colina">Colina</option>
-              <option value="san bernardo">San Bernardo</option>
-              <option value="cerrillos">Cerrillos</option>
             </select>
           </div>
 

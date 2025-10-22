@@ -20,10 +20,7 @@ try {
     $query = "SELECT codigo FROM producto";
     $result = $pdo->query($query);
   
-    $codigos = [];
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-      $codigos[] = $row['codigo'];
-    }
+    $codigos = $result->fetchAll(PDO::FETCH_ASSOC);
   
     echo json_encode(["status" => "ok", "codigos" => $codigos]);
   } catch (PDOException $e) {
